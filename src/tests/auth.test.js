@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { startServer } from "../../app.js";
-import { AppError } from "../service/app-error.js";
+import { httpError } from "../service/app-error.js";
 import {
   resetFirebaseAuthAdapter,
   setFirebaseAuthAdapter,
@@ -53,7 +53,7 @@ function createFirebaseFake() {
 
     signUp(email, password) {
       if (users.has(email)) {
-        throw new AppError(
+        throw httpError(
           "E-mail ja cadastrado",
           409,
           "EMAIL_ALREADY_EXISTS",
@@ -74,7 +74,7 @@ function createFirebaseFake() {
       const user = users.get(email);
 
       if (!user || user.password !== password) {
-        throw new AppError(
+        throw httpError(
           "Credenciais invalidas",
           401,
           "INVALID_CREDENTIALS",
