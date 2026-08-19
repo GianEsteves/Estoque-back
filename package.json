@@ -1,0 +1,15 @@
+{
+  "name": "estoque-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon --exec sucrase-node app.js",
+    "start": "sucrase-node app.js",
+    "test": "jest --watch",
+    "prisma": "prisma",
+    "postinstall": "prisma generate"
+  },
+  "author": "",
+  "license": "ISC"
+}
