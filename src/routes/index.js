@@ -1,7 +1,7 @@
-import { loginUserController } from "../application/user/controller/loginUser.controller.js";
-import { registerUserController } from "../application/user/controller/registerUser.controller.js";
-import { resendVerificationCodeController } from "../application/user/controller/resendVerificationCode.controller.js";
-import { verifyEmailController } from "../application/user/controller/verifyEmail.controller.js";
+import { loginUserController } from "../application/auth/controller/loginUser.controller.js";
+import { registerUserController } from "../application/auth/controller/registerUser.controller.js";
+import { resendVerificationCodeController } from "../application/auth/controller/resendVerificationCode.controller.js";
+import { verifyEmailController } from "../application/auth/controller/verifyEmail.controller.js";
 
 /**
  * Responde ao monitoramento de saude da aplicacao.
