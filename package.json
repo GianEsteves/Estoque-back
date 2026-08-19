@@ -3,30 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --exec sucrase-node app.js",
-    "start": "sucrase-node app.js",
-    "test": "jest --watch",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "test": "node --test src/tests/app.test.js",
+    "test:integration": "node --test src/tests/auth.test.js",
     "prisma": "prisma",
     "postinstall": "prisma generate"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.9.1",
-    "@prisma/client": "^7.9.1",
+    "@prisma/client": "^6.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.4.2",
-    "firebase": "^12.18.0",
-    "pg": "^8.16.3"
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^22.0.0",
-    "jest": "^30.4.2",
     "nodemon": "^3.0.1",
-    "prisma": "^7.9.1",
-    "sucrase": "^3.32.0"
+    "prisma": "^6.19.0"
   }
 }
