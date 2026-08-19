@@ -1,4 +1,4 @@
-import { AppError } from "../../../service/app-error.js";
+import { httpError } from "../../../service/app-error.js";
 import {
   createFirebaseUser,
   deleteFirebaseUser,
@@ -28,7 +28,7 @@ export async function registerUserController(request, response, next) {
     const existingUser = await getUserByEmail(data.email);
 
     if (existingUser) {
-      throw new AppError("E-mail ja cadastrado", 409, "EMAIL_ALREADY_EXISTS");
+      throw httpError("E-mail ja cadastrado", 409, "EMAIL_ALREADY_EXISTS");
     }
 
     firebaseSession = await createFirebaseUser(data.email, data.password);

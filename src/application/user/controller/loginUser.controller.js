@@ -1,4 +1,4 @@
-import { AppError } from "../../../service/app-error.js";
+import { httpError } from "../../../service/app-error.js";
 import {
   getFirebaseAccount,
   signInFirebaseUser,
@@ -23,7 +23,7 @@ export async function loginUserController(request, response, next) {
     const user = await getUserByFirebaseUid(session.localId);
 
     if (!user) {
-      throw new AppError(
+      throw httpError(
         "Perfil local nao encontrado",
         404,
         "USER_PROFILE_NOT_FOUND",
@@ -31,7 +31,7 @@ export async function loginUserController(request, response, next) {
     }
 
     if (!firebaseUser?.emailVerified) {
-      throw new AppError(
+      throw httpError(
         "Valide seu e-mail antes de acessar",
         403,
         "EMAIL_NOT_VERIFIED",

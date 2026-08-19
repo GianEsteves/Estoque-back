@@ -1,4 +1,4 @@
-import { AppError } from "./app-error.js";
+import { httpError } from "./app-error.js";
 
 const FIREBASE_AUTH_URL =
   "https://identitytoolkit.googleapis.com/v1/accounts";
@@ -24,43 +24,43 @@ function getFirebaseApiKey() {
 function mapFirebaseError(firebaseCode) {
   const normalizedCode = firebaseCode?.split(" : ")[0];
   const errors = {
-    EMAIL_EXISTS: new AppError(
+    EMAIL_EXISTS: httpError(
       "E-mail ja cadastrado",
       409,
       "EMAIL_ALREADY_EXISTS",
     ),
-    EMAIL_NOT_FOUND: new AppError(
+    EMAIL_NOT_FOUND: httpError(
       "Credenciais invalidas",
       401,
       "INVALID_CREDENTIALS",
     ),
-    INVALID_PASSWORD: new AppError(
+    INVALID_PASSWORD: httpError(
       "Credenciais invalidas",
       401,
       "INVALID_CREDENTIALS",
     ),
-    INVALID_LOGIN_CREDENTIALS: new AppError(
+    INVALID_LOGIN_CREDENTIALS: httpError(
       "Credenciais invalidas",
       401,
       "INVALID_CREDENTIALS",
     ),
-    USER_DISABLED: new AppError("Conta desativada", 403, "USER_DISABLED"),
-    TOO_MANY_ATTEMPTS_TRY_LATER: new AppError(
+    USER_DISABLED: httpError("Conta desativada", 403, "USER_DISABLED"),
+    TOO_MANY_ATTEMPTS_TRY_LATER: httpError(
       "O Firebase bloqueou temporariamente novos envios. Aguarde antes de tentar novamente.",
       429,
       "TOO_MANY_ATTEMPTS",
     ),
-    RESET_PASSWORD_EXCEED_LIMIT: new AppError(
+    RESET_PASSWORD_EXCEED_LIMIT: httpError(
       "O limite temporario de e-mails do Firebase foi atingido.",
       429,
       "EMAIL_SEND_LIMIT_EXCEEDED",
     ),
-    QUOTA_EXCEEDED: new AppError(
+    QUOTA_EXCEEDED: httpError(
       "A cota de e-mails do Firebase foi atingida.",
       429,
       "EMAIL_SEND_LIMIT_EXCEEDED",
     ),
-    WEAK_PASSWORD: new AppError(
+    WEAK_PASSWORD: httpError(
       "Senha nao atende aos requisitos do Firebase",
       400,
       "WEAK_PASSWORD",
@@ -69,7 +69,7 @@ function mapFirebaseError(firebaseCode) {
 
   return (
     errors[normalizedCode] ||
-    new AppError(
+    httpError(
       "Falha ao autenticar com Firebase",
       502,
       "FIREBASE_AUTH_ERROR",

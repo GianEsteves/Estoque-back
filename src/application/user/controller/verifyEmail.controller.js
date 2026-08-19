@@ -1,4 +1,4 @@
-import { AppError } from "../../../service/app-error.js";
+import { httpError } from "../../../service/app-error.js";
 import { getFirebaseAccount } from "../../../service/firebase-auth.js";
 import {
   getUserByFirebaseUid,
@@ -18,7 +18,7 @@ export async function verifyEmailController(request, response, next) {
     const firebaseUser = await getFirebaseAccount(idToken);
 
     if (!firebaseUser) {
-      throw new AppError(
+      throw httpError(
         "Token Firebase invalido",
         401,
         "INVALID_FIREBASE_TOKEN",
@@ -26,7 +26,7 @@ export async function verifyEmailController(request, response, next) {
     }
 
     if (!firebaseUser.emailVerified) {
-      throw new AppError(
+      throw httpError(
         "E-mail ainda nao foi validado no Firebase",
         403,
         "EMAIL_NOT_VERIFIED",
@@ -36,7 +36,7 @@ export async function verifyEmailController(request, response, next) {
     const user = await getUserByFirebaseUid(firebaseUser.localId);
 
     if (!user) {
-      throw new AppError("Usuario nao encontrado", 404, "USER_NOT_FOUND");
+      throw httpError("Usuario nao encontrado", 404, "USER_NOT_FOUND");
     }
 
     await updateEmailVerification(user.id, true);
