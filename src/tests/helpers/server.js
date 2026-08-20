@@ -1,3 +1,4 @@
+// Aguarda o servidor de teste ficar disponível.
 export function waitForServer(server) {
   if (server.listening) {
     return Promise.resolve();

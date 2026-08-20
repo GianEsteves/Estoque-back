@@ -8,6 +8,7 @@ let testAdapter;
 /**
  * Retorna a chave publica usada pelas operacoes REST do Firebase Auth.
  */
+// Obtém a chave pública usada pela API REST do Firebase.
 function getFirebaseApiKey() {
   const apiKey = process.env.FIREBASE_WEB_API_KEY;
 
@@ -21,6 +22,7 @@ function getFirebaseApiKey() {
 /**
  * Traduz erros do Firebase para respostas conhecidas pela aplicacao.
  */
+// Traduz um código do Firebase para um erro da aplicação.
 function mapFirebaseError(firebaseCode) {
   const normalizedCode = firebaseCode?.split(" : ")[0];
   const errors = {
@@ -80,6 +82,7 @@ function mapFirebaseError(firebaseCode) {
 /**
  * Executa uma operacao na API REST do Firebase Authentication.
  */
+// Executa uma requisição autenticada à API REST do Firebase.
 async function firebaseRequest(endpoint, body) {
   const response = await fetch(
     `${FIREBASE_AUTH_URL}:${endpoint}?key=${getFirebaseApiKey()}`,
@@ -99,6 +102,7 @@ async function firebaseRequest(endpoint, body) {
 }
 
 const firebaseRestAdapter = {
+  // Cria uma conta com e-mail e senha.
   signUp(email, password) {
     return firebaseRequest("signUp", {
       email,
@@ -107,6 +111,7 @@ const firebaseRestAdapter = {
     });
   },
 
+  // Autentica uma conta com e-mail e senha.
   signIn(email, password) {
     return firebaseRequest("signInWithPassword", {
       email,
@@ -115,11 +120,14 @@ const firebaseRestAdapter = {
     });
   },
 
+  // Busca a conta vinculada a um ID token.
+  // Busca a conta associada ao token informado.
   async getAccount(idToken) {
     const data = await firebaseRequest("lookup", { idToken });
     return data.users?.[0];
   },
 
+  // Atualiza os dados públicos da conta.
   updateProfile(idToken, displayName, photoUrl) {
     return firebaseRequest("update", {
       idToken,
@@ -129,6 +137,7 @@ const firebaseRestAdapter = {
     });
   },
 
+  // Solicita a verificação do endereço de e-mail.
   sendEmailVerification(idToken) {
     return firebaseRequest("sendOobCode", {
       requestType: "VERIFY_EMAIL",
@@ -136,14 +145,24 @@ const firebaseRestAdapter = {
     });
   },
 
+  // Exclui uma conta criada parcialmente.
   deleteAccount(idToken) {
     return firebaseRequest("delete", { idToken });
+  },
+
+  // Solicita o e-mail de recuperação de senha.
+  sendPasswordResetEmail(email) {
+    return firebaseRequest("sendOobCode", {
+      requestType: "PASSWORD_RESET",
+      email,
+    });
   },
 };
 
 /**
  * Retorna o adaptador real ou o substituto configurado nos testes.
  */
+// Retorna o adaptador Firebase real ou o simulado.
 function getAdapter() {
   return testAdapter || firebaseRestAdapter;
 }
@@ -151,6 +170,7 @@ function getAdapter() {
 /**
  * Substitui temporariamente a integracao Firebase durante testes.
  */
+// Define o adaptador Firebase usado nos testes.
 export function setFirebaseAuthAdapter(adapter) {
   testAdapter = adapter;
 }
@@ -158,6 +178,7 @@ export function setFirebaseAuthAdapter(adapter) {
 /**
  * Restaura a integracao Firebase REST original.
  */
+// Restaura o adaptador Firebase padrão.
 export function resetFirebaseAuthAdapter() {
   testAdapter = undefined;
 }
@@ -165,6 +186,7 @@ export function resetFirebaseAuthAdapter() {
 /**
  * Cria uma conta no Firebase Authentication.
  */
+// Cria uma conta no Firebase Authentication.
 export function createFirebaseUser(email, password) {
   return getAdapter().signUp(email, password);
 }
@@ -172,6 +194,7 @@ export function createFirebaseUser(email, password) {
 /**
  * Autentica uma conta no Firebase Authentication.
  */
+// Autentica uma conta no Firebase Authentication.
 export function signInFirebaseUser(email, password) {
   return getAdapter().signIn(email, password);
 }
@@ -179,6 +202,7 @@ export function signInFirebaseUser(email, password) {
 /**
  * Busca os dados da conta Firebase pelo ID token.
  */
+// Obtém os dados de uma conta pelo ID token.
 export function getFirebaseAccount(idToken) {
   return getAdapter().getAccount(idToken);
 }
@@ -186,6 +210,7 @@ export function getFirebaseAccount(idToken) {
 /**
  * Atualiza nome e foto no perfil Firebase.
  */
+// Atualiza o nome e a foto do perfil Firebase.
 export function updateFirebaseProfile(idToken, displayName, photoUrl) {
   return getAdapter().updateProfile(idToken, displayName, photoUrl);
 }
@@ -193,6 +218,7 @@ export function updateFirebaseProfile(idToken, displayName, photoUrl) {
 /**
  * Solicita ao Firebase o envio do link de verificacao.
  */
+// Envia a mensagem de verificação de e-mail.
 export function sendFirebaseVerificationEmail(idToken) {
   return getAdapter().sendEmailVerification(idToken);
 }
@@ -200,6 +226,12 @@ export function sendFirebaseVerificationEmail(idToken) {
 /**
  * Exclui uma conta Firebase criada durante um cadastro incompleto.
  */
+// Exclui a conta Firebase em caso de rollback.
 export function deleteFirebaseUser(idToken) {
   return getAdapter().deleteAccount(idToken);
+}
+
+// Envia o e-mail de recuperação de senha.
+export function sendFirebasePasswordResetEmail(email) {
+  return getAdapter().sendPasswordResetEmail(email);
 }
