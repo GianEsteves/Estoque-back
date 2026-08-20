@@ -9,6 +9,7 @@
     "start": "node app.js",
     "test": "node --test src/tests/app.test.js",
     "test:integration": "node --test src/tests/auth.test.js",
+    "users:promote": "node scripts/promote-admin.js",
     "prisma": "prisma",
     "postinstall": "prisma generate"
   },
@@ -17,9 +18,13 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "firebase-admin": "^13.6.1",
+    "helmet": "^8.1.0",
     "pg": "^8.16.3",
     "yup": "^1.6.1"
   },
