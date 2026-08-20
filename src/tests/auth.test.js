@@ -7,12 +7,17 @@ import {
   resetFirebaseAuthAdapter,
   setFirebaseAuthAdapter,
 } from "../service/firebase-auth.js";
+import {
+  resetFirebaseAdminAdapter,
+  setFirebaseAdminAdapter,
+} from "../service/firebase-admin.js";
 import { prisma } from "../service/prisma.js";
 import { waitForServer } from "./helpers/server.js";
 
 /**
  * Envia uma requisicao JSON para o backend iniciado durante o teste.
  */
+// Envia uma requisição JSON ao servidor de teste.
 async function request(port, path, body) {
   const response = await fetch(`http://localhost:${port}${path}`, {
     method: "POST",
@@ -29,6 +34,7 @@ async function request(port, path, body) {
 /**
  * Cria uma implementacao Firebase previsivel para os testes de integracao.
  */
+// Cria uma implementação local do Firebase REST.
 function createFirebaseFake() {
   const users = new Map();
   const tokens = new Map();
@@ -51,6 +57,7 @@ function createFirebaseFake() {
   return {
     users,
 
+    // Simula a criação de uma conta Firebase.
     signUp(email, password) {
       if (users.has(email)) {
         throw httpError(
@@ -70,6 +77,7 @@ function createFirebaseFake() {
       return createSession(user);
     },
 
+    // Simula o login de uma conta Firebase.
     signIn(email, password) {
       const user = users.get(email);
 
@@ -84,10 +92,12 @@ function createFirebaseFake() {
       return createSession(user);
     },
 
+    // Simula a consulta de uma conta pelo token.
     getAccount(idToken) {
       return tokens.get(idToken);
     },
 
+    // Simula a atualização de perfil da conta.
     updateProfile(idToken, displayName, photoUrl) {
       const user = tokens.get(idToken);
       user.displayName = displayName;
@@ -95,6 +105,7 @@ function createFirebaseFake() {
       return user;
     },
 
+    // Simula o envio do e-mail de verificação.
     sendEmailVerification(idToken) {
       const user = tokens.get(idToken);
       user.verificationEmailCount =
@@ -102,6 +113,7 @@ function createFirebaseFake() {
       return { email: user.email };
     },
 
+    // Simula a exclusão de uma conta de teste.
     deleteAccount(idToken) {
       const user = tokens.get(idToken);
 
@@ -114,15 +126,42 @@ function createFirebaseFake() {
   };
 }
 
+// Cria uma implementação local do Firebase Admin.
+function createFirebaseAdminFake() {
+  return {
+    // Simula a criação de cookie de sessão.
+    createSessionCookie(idToken) {
+      return `session-${idToken}`;
+    },
+    // Impede uso inesperado da verificação de ID token.
+    verifyIdToken() {
+      throw new Error("Não usado neste teste");
+    },
+    // Impede uso inesperado da verificação de sessão.
+    verifySessionCookie() {
+      throw new Error("Não usado neste teste");
+    },
+    // Simula a revogação de tokens.
+    revokeRefreshTokens() {
+      return undefined;
+    },
+    // Simula a atualização de conta administrativa.
+    updateUser() {
+      return undefined;
+    },
+  };
+}
+
 test("fluxo Firebase de cadastro, verificacao e login", async () => {
   const firebase = createFirebaseFake();
   setFirebaseAuthAdapter(firebase);
+  setFirebaseAdminAdapter(createFirebaseAdminFake());
 
   const server = startServer(0);
   await waitForServer(server);
   const { port } = server.address();
   const email = `firebase-${Date.now()}@example.com`;
-  const password = "SenhaSegura123";
+  const password = "SenhaSegura@123";
   const registration = {
     name: "Usuario Firebase",
     email,
@@ -149,7 +188,7 @@ test("fluxo Firebase de cadastro, verificacao e login", async () => {
     assert.equal(registered.status, 201);
     assert.equal(registered.body.emailVerified, false);
     assert.match(registered.body.firebaseUid, /^firebase-/);
-    assert.match(registered.body.token, /^id-token-/);
+    assert.equal(registered.body.token, undefined);
     assert.equal(registered.body.refreshToken, undefined);
     assert.equal(registered.body.emailDelivery.recipient, email);
     assert.equal(registered.body.emailDelivery.status, "accepted");
@@ -182,14 +221,15 @@ test("fluxo Firebase de cadastro, verificacao e login", async () => {
     const firebaseUser = firebase.users.get(email);
     firebaseUser.emailVerified = true;
 
+    const verifiedSession = await firebase.signIn(email, password);
     const verified = await request(port, "/auth/verify-email", {
-      idToken: registered.body.token,
+      idToken: verifiedSession.idToken,
     });
     assert.equal(verified.status, 200);
 
     const login = await request(port, "/auth/login", { email, password });
     assert.equal(login.status, 200);
-    assert.match(login.body.token, /^id-token-/);
+    assert.equal(login.body.token, undefined);
     assert.equal(login.body.refreshToken, undefined);
     assert.equal(login.body.expiresIn, 3600);
     assert.equal(login.body.user.email, email);
@@ -199,6 +239,7 @@ test("fluxo Firebase de cadastro, verificacao e login", async () => {
     assert.ok(activeUser.emailVerifiedAt);
   } finally {
     resetFirebaseAuthAdapter();
+    resetFirebaseAdminAdapter();
     await prisma.user.deleteMany({ where: { email } });
     await new Promise((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));
@@ -209,12 +250,13 @@ test("fluxo Firebase de cadastro, verificacao e login", async () => {
 test("Firebase rejeita credenciais incorretas", async () => {
   const firebase = createFirebaseFake();
   setFirebaseAuthAdapter(firebase);
+  setFirebaseAdminAdapter(createFirebaseAdminFake());
 
   const server = startServer(0);
   await waitForServer(server);
   const { port } = server.address();
   const email = `firebase-login-${Date.now()}@example.com`;
-  const password = "SenhaSegura123";
+  const password = "SenhaSegura@123";
 
   try {
     const registered = await request(port, "/auth/register", {
@@ -235,6 +277,7 @@ test("Firebase rejeita credenciais incorretas", async () => {
     assert.equal(invalidLogin.body.code, "INVALID_CREDENTIALS");
   } finally {
     resetFirebaseAuthAdapter();
+    resetFirebaseAdminAdapter();
     await prisma.user.deleteMany({ where: { email } });
     await new Promise((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));
