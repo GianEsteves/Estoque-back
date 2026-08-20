@@ -1,12 +1,16 @@
+import { audit } from "../../../service/audit.js";
 import { httpError } from "../../../service/app-error.js";
+import { createFirebaseSession } from "../../../service/firebase-admin.js";
 import {
   getFirebaseAccount,
   signInFirebaseUser,
 } from "../../../service/firebase-auth.js";
 import {
   getUserByFirebaseUid,
+  updateUser,
   updateEmailVerification,
 } from "../repository/user.repository.js";
+import { setSession } from "../../../service/session.js";
 import { loginValidation } from "../validation/user.validation.js";
 
 /**
@@ -30,6 +34,10 @@ export async function loginUserController(request, response, next) {
       );
     }
 
+    if (!user.isActive) {
+      throw httpError("Conta desativada", 403, "ACCOUNT_DISABLED");
+    }
+
     if (!firebaseUser?.emailVerified) {
       throw httpError(
         "Valide seu e-mail antes de acessar",
@@ -42,15 +50,24 @@ export async function loginUserController(request, response, next) {
       await updateEmailVerification(user.id, true);
     }
 
+    const sessionCookie = await createFirebaseSession(session.idToken);
+    await updateUser(user.id, { lastLoginAt: new Date() });
+    await audit({
+      actorId: user.id,
+      action: "AUTH_LOGIN",
+      entityType: "User",
+      entityId: user.id,
+    });
+
+    setSession(response, sessionCookie);
     response.set("Cache-Control", "no-store").status(200).json({
-      token: session.idToken,
-      expiresIn: Number(session.expiresIn),
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         phone: user.phone,
         profilePhoto: user.profilePhoto,
+        role: user.role,
       },
     });
   } catch (error) {

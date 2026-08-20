@@ -46,6 +46,13 @@ export async function registerUserController(request, response, next) {
       profilePhoto: data.profilePhoto,
     });
 
+    await audit({
+      actorId: user.id,
+      action: "AUTH_REGISTERED",
+      entityType: "User",
+      entityId: user.id,
+    });
+
     const delivery = await sendFirebaseVerificationEmail(
       firebaseSession.idToken,
     );
@@ -55,8 +62,6 @@ export async function registerUserController(request, response, next) {
       firebaseUid: user.firebaseUid,
       email: user.email,
       emailVerified: false,
-      token: firebaseSession.idToken,
-      expiresIn: Number(firebaseSession.expiresIn),
       emailDelivery: {
         recipient: delivery.email,
         status: "accepted",
@@ -76,3 +81,4 @@ export async function registerUserController(request, response, next) {
     next(error);
   }
 }
+import { audit } from "../../../service/audit.js";
