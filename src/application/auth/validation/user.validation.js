@@ -10,6 +10,7 @@ const email = yup
 /**
  * Valida se a foto de perfil aponta para uma URL HTTPS, como a do Firebase.
  */
+// Confirma que a URL utiliza HTTPS.
 function isHttpsUrl(value) {
   if (!value) {
     return false;
@@ -27,8 +28,12 @@ export const registerValidation = yup.object({
   email,
   password: yup
     .string()
-    .min(8, "A senha deve possuir no minimo 8 caracteres")
+    .min(12, "A senha deve possuir no mínimo 12 caracteres")
     .max(64)
+    .matches(/[a-z]/, "A senha deve possuir letra minúscula")
+    .matches(/[A-Z]/, "A senha deve possuir letra maiúscula")
+    .matches(/[0-9]/, "A senha deve possuir número")
+    .matches(/[^A-Za-z0-9]/, "A senha deve possuir símbolo")
     .required("Senha e obrigatoria"),
   phone: yup
     .string()
@@ -43,7 +48,8 @@ export const registerValidation = yup.object({
       "Foto de perfil deve ser uma URL HTTPS valida",
       isHttpsUrl,
     )
-    .required("Foto de perfil é obrigatoria"),
+    .nullable()
+    .optional(),
 });
 
 export const verifyEmailValidation = yup.object({
@@ -56,3 +62,16 @@ export const loginValidation = yup.object({
 });
 
 export const resendValidation = loginValidation;
+
+export const passwordResetValidation = yup.object({ email });
+
+export const changePasswordValidation = yup.object({
+  currentPassword: yup.string().required("Senha atual é obrigatória"),
+  newPassword: registerValidation.fields.password,
+});
+
+export const updateUserValidation = yup.object({
+  role: yup.mixed().oneOf(["ADMIN", "VENDEDOR", "ESTOQUISTA"]),
+  isActive: yup.boolean(),
+  mfaRequired: yup.boolean(),
+});
