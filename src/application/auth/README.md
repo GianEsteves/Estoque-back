@@ -6,6 +6,13 @@ O sistema deve permitir que usuários façam login com e-mail e senha.
 
 Este módulo concentra registro, login, verificação de e-mail e gerenciamento de sessão.
 
+## Funcionalidades
+
+- Registrar conta, verificar e-mail e autenticar com e-mail e senha.
+- Criar e encerrar sessões seguras com cookies.
+- Recuperar e alterar senha, revogando sessões quando necessário.
+- Expor os dados da sessão atual e proteger rotas privadas.
+
 ## Segurança implementada
 
 - Sessão em cookie `HttpOnly`, `Secure` em produção e `SameSite=Lax`.
@@ -41,3 +48,11 @@ MFA exige configuração do segundo fator no Firebase Authentication/Identity Pl
 | PATCH | `/users/:id` | ADMIN |
 
 Após o login, o backend envia os cookies `session` e `csrf_token`. O frontend deve usar `credentials: "include"` nas requisições e mandar o valor do cookie `csrf_token` no cabeçalho `X-CSRF-Token` para `POST`, `PATCH`, `PUT` e `DELETE` autenticados.
+
+## Contratos principais
+
+- `POST /auth/register`: recebe `name`, `email`, `password`, `phone` e `profilePhoto` opcional; cria a conta e solicita a verificação do e-mail.
+- `POST /auth/login`: recebe `email` e `password`; cria a sessão somente para contas ativas e com e-mail verificado.
+- `POST /auth/password-reset`: recebe `email`; sempre retorna uma mensagem genérica, sem informar se a conta existe.
+- `POST /auth/change-password`: recebe `currentPassword` e `newPassword`; encerra as sessões após a alteração.
+- `POST /auth/logout`: remove cookies e revoga todas as sessões ativas do usuário.
