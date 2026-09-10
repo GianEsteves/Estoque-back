@@ -63,4 +63,19 @@ export function updateFirebasePassword(firebaseUid, password) {
   return getAdminAuth().updateUser(firebaseUid, { password });
 }
 
+// Cria uma conta gerenciada pelo Firebase Admin.
+export function createFirebaseUser(data) {
+  return getAdminAuth().createUser(data);
+}
+
+// Atualiza dados administrativos da conta Firebase.
+export function updateFirebaseUser(firebaseUid, data) {
+  return getAdminAuth().updateUser(firebaseUid, data);
+}
+
+// Exclui uma conta Firebase criada em uma operação incompleta.
+export function deleteFirebaseUserByUid(firebaseUid) {
+  return getAdminAuth().deleteUser(firebaseUid);
+}
+
 export { sessionDuration };

@@ -13,9 +13,11 @@ import { passwordResetController } from "../application/auth/controller/password
 import { registerUserController } from "../application/auth/controller/registerUser.controller.js";
 import { resendVerificationCodeController } from "../application/auth/controller/resendVerificationCode.controller.js";
 import {
+  createUserController,
+  getUserController,
   listUsersController,
   updateUserController,
-} from "../application/auth/controller/users.controller.js";
+} from "../application/user/controller/user.controller.js";
 import { verifyEmailController } from "../application/auth/controller/verifyEmail.controller.js";
 
 /**
@@ -43,6 +45,15 @@ export default function routes(app) {
   );
 
   app.get("/users", authenticate, authorize("ADMIN"), listUsersController);
+  app.get("/users/:id", authenticate, authorize("ADMIN"), getUserController);
+  app.post(
+    "/users",
+    authenticate,
+    authorize("ADMIN"),
+    requireCsrf,
+    registrationRateLimit,
+    createUserController,
+  );
   app.patch(
     "/users/:id",
     authenticate,
