@@ -21,4 +21,18 @@ Este módulo será responsável por papéis, permissões e autorização das rot
 | VENDEDOR | Clientes, vendas, consulta de produtos e dashboard comercial. |
 | ESTOQUISTA | Produtos, categorias, fornecedores, estoque e movimentações. |
 
-Não há rotas públicas de permissões nesta primeira versão. A definição de papel é realizada pelo administrador em `PATCH /users/:id`.
+## Rotas
+
+| Método | Rota | Acesso | Descrição |
+| --- | --- | --- | --- |
+| GET | `/permissions/me` | Autenticado | Retorna o papel e as permissões efetivas do usuário atual. |
+| GET | `/permissions` | ADMIN | Retorna a matriz completa de permissões por papel. |
+| PATCH | `/users/:id` | ADMIN | Define o papel do usuário; a alteração revoga sessões ativas. |
+
+## Pré-requisitos atendidos
+
+- Papéis persistidos no banco: `ADMIN`, `VENDEDOR` e `ESTOQUISTA`.
+- Middleware `authenticate` em todas as rotas privadas.
+- Middleware `authorize` para restringir papéis e `authorizePermission` para novas rotas baseadas em permissão.
+- Alterações de papel exigem `ADMIN`, token CSRF e são registradas em auditoria.
+- A aplicação impede desativar ou rebaixar o último administrador ativo.

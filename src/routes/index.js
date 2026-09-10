@@ -19,6 +19,10 @@ import {
   updateUserController,
 } from "../application/user/controller/user.controller.js";
 import { verifyEmailController } from "../application/auth/controller/verifyEmail.controller.js";
+import {
+  getMyPermissionsController,
+  listPermissionsController,
+} from "../application/permissions/controller/permission.controller.js";
 
 /**
  * Responde ao monitoramento de saude da aplicacao.
@@ -42,6 +46,18 @@ export default function routes(app) {
     authenticate,
     requireCsrf,
     changePasswordController,
+  );
+
+  app.get(
+    "/permissions/me",
+    authenticate,
+    getMyPermissionsController,
+  );
+  app.get(
+    "/permissions",
+    authenticate,
+    authorize("ADMIN"),
+    listPermissionsController,
   );
 
   app.get("/users", authenticate, authorize("ADMIN"), listUsersController);
