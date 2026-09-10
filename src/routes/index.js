@@ -23,6 +23,12 @@ import {
   getMyPermissionsController,
   listPermissionsController,
 } from "../application/permissions/controller/permission.controller.js";
+import {
+  createSupplierController,
+  getSupplierController,
+  listSuppliersController,
+  updateSupplierController,
+} from "../application/suppliers/controller/supplier.controller.js";
 
 /**
  * Responde ao monitoramento de saude da aplicacao.
@@ -76,5 +82,32 @@ export default function routes(app) {
     authorize("ADMIN"),
     requireCsrf,
     updateUserController,
+  );
+
+  app.get(
+    "/suppliers",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    listSuppliersController,
+  );
+  app.get(
+    "/suppliers/:id",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    getSupplierController,
+  );
+  app.post(
+    "/suppliers",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    requireCsrf,
+    createSupplierController,
+  );
+  app.patch(
+    "/suppliers/:id",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    requireCsrf,
+    updateSupplierController,
   );
 }

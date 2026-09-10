@@ -37,6 +37,22 @@ model User {
   auditLogs       AuditLog[]
 }
 
+model Supplier {
+  id         String   @id @default(cuid())
+  legalName  String
+  tradeName  String?
+  document   String?  @unique
+  email      String?
+  phone      String?
+  address    Json?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([legalName])
+  @@index([isActive])
+}
+
 enum Role {
   ADMIN
   VENDEDOR
