@@ -35,6 +35,12 @@ import {
   listCustomersController,
   updateCustomerController,
 } from "../application/customers/controller/customer.controller.js";
+import {
+  createProductController,
+  getProductController,
+  listProductsController,
+  updateProductController,
+} from "../application/products/controller/product.controller.js";
 
 /**
  * Responde ao monitoramento de saude da aplicacao.
@@ -142,5 +148,22 @@ export default function routes(app) {
     authorize("ADMIN", "VENDEDOR"),
     requireCsrf,
     updateCustomerController,
+  );
+
+  app.get("/products", authenticate, listProductsController);
+  app.get("/products/:id", authenticate, getProductController);
+  app.post(
+    "/products",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    requireCsrf,
+    createProductController,
+  );
+  app.patch(
+    "/products/:id",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    requireCsrf,
+    updateProductController,
   );
 }
