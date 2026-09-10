@@ -53,6 +53,21 @@ model Supplier {
   @@index([isActive])
 }
 
+model Customer {
+  id         String   @id @default(cuid())
+  name       String
+  document   String?  @unique
+  email      String?
+  phone      String?
+  address    Json?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([name])
+  @@index([isActive])
+}
+
 enum Role {
   ADMIN
   VENDEDOR

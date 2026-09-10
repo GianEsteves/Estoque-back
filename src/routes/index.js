@@ -29,6 +29,12 @@ import {
   listSuppliersController,
   updateSupplierController,
 } from "../application/suppliers/controller/supplier.controller.js";
+import {
+  createCustomerController,
+  getCustomerController,
+  listCustomersController,
+  updateCustomerController,
+} from "../application/customers/controller/customer.controller.js";
 
 /**
  * Responde ao monitoramento de saude da aplicacao.
@@ -109,5 +115,32 @@ export default function routes(app) {
     authorize("ADMIN", "ESTOQUISTA"),
     requireCsrf,
     updateSupplierController,
+  );
+
+  app.get(
+    "/customers",
+    authenticate,
+    authorize("ADMIN", "VENDEDOR"),
+    listCustomersController,
+  );
+  app.get(
+    "/customers/:id",
+    authenticate,
+    authorize("ADMIN", "VENDEDOR"),
+    getCustomerController,
+  );
+  app.post(
+    "/customers",
+    authenticate,
+    authorize("ADMIN", "VENDEDOR"),
+    requireCsrf,
+    createCustomerController,
+  );
+  app.patch(
+    "/customers/:id",
+    authenticate,
+    authorize("ADMIN", "VENDEDOR"),
+    requireCsrf,
+    updateCustomerController,
   );
 }
