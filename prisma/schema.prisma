@@ -35,6 +35,7 @@ model User {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   auditLogs       AuditLog[]
+  stockMovements  StockMovement[]
 }
 
 model Supplier {
@@ -90,6 +91,7 @@ model Product {
   isActive     Boolean   @default(true)
   categoryId   String
   category     Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  movements    StockMovement[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -117,4 +119,41 @@ model AuditLog {
   @@index([actorId])
   @@index([entityType, entityId])
   @@index([createdAt])
+}
+
+model StockMovement {
+  id            String           @id @default(cuid())
+  type          MovementType
+  origin        MovementOrigin
+  quantity      Int
+  previousStock Int
+  newStock      Int
+  reason        String?
+  referenceId   String?
+  createdAt     DateTime         @default(now())
+  productId     String
+  product       Product          @relation(fields: [productId], references: [id], onDelete: Restrict)
+  userId        String?
+  user          User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId, createdAt])
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+  @@index([origin, createdAt])
+}
+
+enum MovementType {
+  ENTRY
+  EXIT
+  SALE
+  CANCELLATION
+  ADJUSTMENT
+}
+
+enum MovementOrigin {
+  MANUAL
+  PURCHASE
+  SALE
+  CANCELLATION
+  ADJUSTMENT
 }

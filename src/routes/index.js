@@ -41,6 +41,10 @@ import {
   listProductsController,
   updateProductController,
 } from "../application/products/controller/product.controller.js";
+import {
+  getMovementController,
+  listMovementsController,
+} from "../application/movements/controller/movement.controller.js";
 
 /**
  * Responde ao monitoramento de saude da aplicacao.
@@ -165,5 +169,18 @@ export default function routes(app) {
     authorize("ADMIN", "ESTOQUISTA"),
     requireCsrf,
     updateProductController,
+  );
+
+  app.get(
+    "/inventory/movements",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    listMovementsController,
+  );
+  app.get(
+    "/inventory/movements/:id",
+    authenticate,
+    authorize("ADMIN", "ESTOQUISTA"),
+    getMovementController,
   );
 }

@@ -21,3 +21,12 @@ O sistema deve permitir filtrar e paginar o histórico por período, produto, ti
 | --- | --- | --- | --- |
 | GET | `/inventory/movements` | ADMIN, ESTOQUISTA | Lista movimentações com filtros e paginação. |
 | GET | `/inventory/movements/:id` | ADMIN, ESTOQUISTA | Consulta os detalhes de uma movimentação. |
+
+## Pré-requisitos atendidos
+
+- Histórico persistido no modelo `StockMovement`, sem rotas de edição ou exclusão.
+- Cada registro contém produto, usuário responsável, tipo, origem, quantidade, saldo anterior, saldo posterior, motivo, referência e data.
+- Serviço interno `recordStockMovement` atualiza o saldo e cria o histórico na mesma transação serializável.
+- O serviço rejeita saldo negativo, quantidade zero e tipo de movimentação com sinal incompatível.
+- Filtros disponíveis: `productId`, `userId`, `type`, `origin`, `from`, `to`, `page` e `limit`.
+- Somente `ADMIN` e `ESTOQUISTA` podem consultar o histórico; paginação limitada a 100 registros.
