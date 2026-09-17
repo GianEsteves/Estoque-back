@@ -13,7 +13,7 @@ O sistema deve manter registro de ações relevantes, como criação, edição, 
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/audit-logs` | ADMIN | Lista auditorias com filtros e paginação. |
-| GET | `/audit-logs/:id` | ADMIN | Consulta o detalhe de um registro de auditoria. |
+| Método | Rota              | Acesso | Descrição                                       |
+| ------ | ----------------- | ------ | ----------------------------------------------- |
+| GET    | `/audit-logs`     | ADMIN  | Lista auditorias com filtros e paginação.       |
+| GET    | `/audit-logs/:id` | ADMIN  | Consulta o detalhe de um registro de auditoria. |
