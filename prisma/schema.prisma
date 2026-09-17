@@ -10,6 +10,7 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -20,50 +21,54 @@ datasource db {
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 model User {
-  id              String         @id @default(cuid())
-  firebaseUid     String         @unique
+  id              String          @id @default(cuid())
+  firebaseUid     String          @unique
   name            String
-  email           String         @unique
+  email           String          @unique
   phone           String
   profilePhoto    String?
-  role            Role           @default(ESTOQUISTA)
-  isActive        Boolean        @default(true)
-  mfaRequired     Boolean        @default(false)
-  emailVerified   Boolean        @default(false)
+  role            Role            @default(ESTOQUISTA)
+  isActive        Boolean         @default(true)
+  mfaRequired     Boolean         @default(false)
+  emailVerified   Boolean         @default(false)
   emailVerifiedAt DateTime?
   lastLoginAt     DateTime?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   auditLogs       AuditLog[]
   stockMovements  StockMovement[]
+  stockEntries    StockEntry[]
+  sales           Sale[]
 }
 
 model Supplier {
-  id         String   @id @default(cuid())
-  legalName  String
-  tradeName  String?
-  document   String?  @unique
-  email      String?
-  phone      String?
-  address    Json?
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String       @id @default(cuid())
+  legalName String
+  tradeName String?
+  document  String?      @unique
+  email     String?
+  phone     String?
+  address   Json?
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  entries   StockEntry[]
 
   @@index([legalName])
   @@index([isActive])
 }
 
 model Customer {
-  id         String   @id @default(cuid())
-  name       String
-  document   String?  @unique
-  email      String?
-  phone      String?
-  address    Json?
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  document  String?  @unique
+  email     String?
+  phone     String?
+  address   Json?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     Sale[]
 
   @@index([name])
   @@index([isActive])
@@ -80,20 +85,22 @@ model Category {
 }
 
 model Product {
-  id           String    @id @default(cuid())
-  name         String
-  sku          String    @unique
-  description  String?
-  costPrice    Decimal   @db.Decimal(12, 2)
-  salePrice    Decimal   @db.Decimal(12, 2)
-  minimumStock Int       @default(0)
-  stockQuantity Int      @default(0)
-  isActive     Boolean   @default(true)
-  categoryId   String
-  category     Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  movements    StockMovement[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id            String           @id @default(cuid())
+  name          String
+  sku           String           @unique
+  description   String?
+  costPrice     Decimal          @db.Decimal(12, 2)
+  salePrice     Decimal          @db.Decimal(12, 2)
+  minimumStock  Int              @default(0)
+  stockQuantity Int              @default(0)
+  isActive      Boolean          @default(true)
+  categoryId    String
+  category      Category         @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  movements     StockMovement[]
+  entryItems    StockEntryItem[]
+  saleItems     SaleItem[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   @@index([name])
   @@index([categoryId])
@@ -122,7 +129,7 @@ model AuditLog {
 }
 
 model StockMovement {
-  id            String           @id @default(cuid())
+  id            String         @id @default(cuid())
   type          MovementType
   origin        MovementOrigin
   quantity      Int
@@ -130,16 +137,83 @@ model StockMovement {
   newStock      Int
   reason        String?
   referenceId   String?
-  createdAt     DateTime         @default(now())
+  createdAt     DateTime       @default(now())
   productId     String
-  product       Product          @relation(fields: [productId], references: [id], onDelete: Restrict)
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
   userId        String?
-  user          User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([productId, createdAt])
   @@index([userId, createdAt])
   @@index([type, createdAt])
   @@index([origin, createdAt])
+}
+
+model StockEntry {
+  id         String           @id @default(cuid())
+  supplierId String
+  supplier   Supplier         @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  receivedAt DateTime         @default(now())
+  notes      String?
+  createdAt  DateTime         @default(now())
+  userId     String?
+  user       User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items      StockEntryItem[]
+
+  @@index([supplierId, receivedAt])
+}
+
+model StockEntryItem {
+  id        String     @id @default(cuid())
+  entryId   String
+  entry     StockEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity  Int
+  unitCost  Decimal    @db.Decimal(12, 2)
+
+  @@index([productId])
+}
+
+model Sale {
+  id                 String     @id @default(cuid())
+  customerId         String?
+  customer           Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  userId             String
+  user               User       @relation(fields: [userId], references: [id], onDelete: Restrict)
+  status             SaleStatus @default(COMPLETED)
+  paymentMethod      String
+  discount           Decimal    @default(0) @db.Decimal(12, 2)
+  subtotal           Decimal    @db.Decimal(12, 2)
+  total              Decimal    @db.Decimal(12, 2)
+  cancellationReason String?
+  cancelledAt        DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  items              SaleItem[]
+
+  @@index([customerId, createdAt])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model SaleItem {
+  id        String  @id @default(cuid())
+  saleId    String
+  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Restrict)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity  Int
+  unitPrice Decimal @db.Decimal(12, 2)
+  discount  Decimal @default(0) @db.Decimal(12, 2)
+  total     Decimal @db.Decimal(12, 2)
+
+  @@index([productId])
+}
+
+enum SaleStatus {
+  COMPLETED
+  CANCELLED
 }
 
 enum MovementType {
