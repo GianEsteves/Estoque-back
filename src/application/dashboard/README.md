@@ -13,8 +13,8 @@ O sistema deve disponibilizar um dashboard com indicadores como vendas do perío
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/dashboard` | ADMIN, VENDEDOR | Retorna os indicadores permitidos para o perfil. |
-| GET | `/dashboard/top-products` | ADMIN, VENDEDOR | Lista produtos mais vendidos no período. |
-| GET | `/dashboard/stock-summary` | ADMIN, ESTOQUISTA | Retorna resumo e alertas de estoque. |
+| Método | Rota                       | Acesso            | Descrição                                        |
+| ------ | -------------------------- | ----------------- | ------------------------------------------------ |
+| GET    | `/dashboard`               | ADMIN, VENDEDOR   | Retorna os indicadores permitidos para o perfil. |
+| GET    | `/dashboard/top-products`  | ADMIN, VENDEDOR   | Lista produtos mais vendidos no período.         |
+| GET    | `/dashboard/stock-summary` | ADMIN, ESTOQUISTA | Retorna resumo e alertas de estoque.             |
