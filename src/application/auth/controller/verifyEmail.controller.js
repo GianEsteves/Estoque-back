@@ -18,11 +18,7 @@ export async function verifyEmailController(request, response, next) {
     const firebaseUser = await getFirebaseAccount(idToken);
 
     if (!firebaseUser) {
-      throw httpError(
-        "Token Firebase invalido",
-        401,
-        "INVALID_FIREBASE_TOKEN",
-      );
+      throw httpError("Token Firebase invalido", 401, "INVALID_FIREBASE_TOKEN");
     }
 
     if (!firebaseUser.emailVerified) {

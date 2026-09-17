@@ -34,18 +34,18 @@ MFA exige configuração do segundo fator no Firebase Authentication/Identity Pl
 
 ## Rotas
 
-| Método | Rota | Acesso |
-| --- | --- | --- |
-| POST | `/auth/register` | Público |
-| POST | `/auth/login` | Público |
-| POST | `/auth/password-reset` | Público |
-| POST | `/auth/verify-email` | Público, com ID token Firebase |
-| POST | `/auth/resend-code` | Público |
-| GET | `/auth/me` | Autenticado |
-| POST | `/auth/change-password` | Autenticado |
-| POST | `/auth/logout` | Autenticado; revoga as sessões |
-| GET | `/users` | ADMIN |
-| PATCH | `/users/:id` | ADMIN |
+| Método | Rota                    | Acesso                         |
+| ------ | ----------------------- | ------------------------------ |
+| POST   | `/auth/register`        | Público                        |
+| POST   | `/auth/login`           | Público                        |
+| POST   | `/auth/password-reset`  | Público                        |
+| POST   | `/auth/verify-email`    | Público, com ID token Firebase |
+| POST   | `/auth/resend-code`     | Público                        |
+| GET    | `/auth/me`              | Autenticado                    |
+| POST   | `/auth/change-password` | Autenticado                    |
+| POST   | `/auth/logout`          | Autenticado; revoga as sessões |
+| GET    | `/users`                | ADMIN                          |
+| PATCH  | `/users/:id`            | ADMIN                          |
 
 Após o login, o backend envia os cookies `session` e `csrf_token`. O frontend deve usar `credentials: "include"` nas requisições e mandar o valor do cookie `csrf_token` no cabeçalho `X-CSRF-Token` para `POST`, `PATCH`, `PUT` e `DELETE` autenticados.
 

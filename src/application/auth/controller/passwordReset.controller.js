@@ -11,7 +11,8 @@ export async function passwordResetController(request, response, next) {
 
     await sendFirebasePasswordResetEmail(email).catch(() => {});
     response.status(200).json({
-      message: "Se o e-mail estiver cadastrado, você receberá instruções para redefinir a senha.",
+      message:
+        "Se o e-mail estiver cadastrado, você receberá instruções para redefinir a senha.",
     });
   } catch (error) {
     next(error);

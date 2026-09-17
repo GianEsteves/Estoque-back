@@ -60,16 +60,19 @@ export async function loginUserController(request, response, next) {
     });
 
     setSession(response, sessionCookie);
-    response.set("Cache-Control", "no-store").status(200).json({
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        profilePhoto: user.profilePhoto,
-        role: user.role,
-      },
-    });
+    response
+      .set("Cache-Control", "no-store")
+      .status(200)
+      .json({
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          profilePhoto: user.profilePhoto,
+          role: user.role,
+        },
+      });
   } catch (error) {
     next(error);
   }

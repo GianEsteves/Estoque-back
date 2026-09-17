@@ -57,18 +57,21 @@ export async function registerUserController(request, response, next) {
       firebaseSession.idToken,
     );
 
-    response.set("Cache-Control", "no-store").status(201).json({
-      id: user.id,
-      firebaseUid: user.firebaseUid,
-      email: user.email,
-      emailVerified: false,
-      emailDelivery: {
-        recipient: delivery.email,
-        status: "accepted",
-      },
-      message:
-        "Cadastro realizado. Abra o link enviado pelo Firebase para validar o e-mail.",
-    });
+    response
+      .set("Cache-Control", "no-store")
+      .status(201)
+      .json({
+        id: user.id,
+        firebaseUid: user.firebaseUid,
+        email: user.email,
+        emailVerified: false,
+        emailDelivery: {
+          recipient: delivery.email,
+          status: "accepted",
+        },
+        message:
+          "Cadastro realizado. Abra o link enviado pelo Firebase para validar o e-mail.",
+      });
   } catch (error) {
     if (user?.id) {
       await deleteUser(user.id).catch(() => {});
