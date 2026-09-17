@@ -14,7 +14,11 @@ export async function listMovementsController(request, response, next) {
     });
 
     if (filters.from && filters.to && filters.from > filters.to) {
-      throw httpError("Data inicial não pode ser posterior à data final", 400, "INVALID_DATE_RANGE");
+      throw httpError(
+        "Data inicial não pode ser posterior à data final",
+        400,
+        "INVALID_DATE_RANGE",
+      );
     }
 
     const { movements, total } = await listMovements(filters);

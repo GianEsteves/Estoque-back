@@ -17,10 +17,10 @@ O sistema deve permitir filtrar e paginar o histórico por período, produto, ti
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/inventory/movements` | ADMIN, ESTOQUISTA | Lista movimentações com filtros e paginação. |
-| GET | `/inventory/movements/:id` | ADMIN, ESTOQUISTA | Consulta os detalhes de uma movimentação. |
+| Método | Rota                       | Acesso            | Descrição                                    |
+| ------ | -------------------------- | ----------------- | -------------------------------------------- |
+| GET    | `/inventory/movements`     | ADMIN, ESTOQUISTA | Lista movimentações com filtros e paginação. |
+| GET    | `/inventory/movements/:id` | ADMIN, ESTOQUISTA | Consulta os detalhes de uma movimentação.    |
 
 ## Pré-requisitos atendidos
 

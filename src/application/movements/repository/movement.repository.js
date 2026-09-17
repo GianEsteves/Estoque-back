@@ -6,14 +6,28 @@ const includeRelations = {
 };
 
 // Lista movimentações imutáveis aplicando filtros e paginação.
-export async function listMovements({ productId, userId, type, origin, from, to, page, limit }) {
+export async function listMovements({
+  productId,
+  userId,
+  type,
+  origin,
+  from,
+  to,
+  page,
+  limit,
+}) {
   const where = {
     ...(productId ? { productId } : {}),
     ...(userId ? { userId } : {}),
     ...(type ? { type } : {}),
     ...(origin ? { origin } : {}),
     ...(from || to
-      ? { createdAt: { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) } }
+      ? {
+          createdAt: {
+            ...(from ? { gte: from } : {}),
+            ...(to ? { lte: to } : {}),
+          },
+        }
       : {}),
   };
   const skip = (page - 1) * limit;
@@ -33,5 +47,8 @@ export async function listMovements({ productId, userId, type, origin, from, to,
 
 // Busca uma movimentação e seus relacionamentos pelo identificador.
 export function getMovementById(id) {
-  return prisma.stockMovement.findUnique({ where: { id }, include: includeRelations });
+  return prisma.stockMovement.findUnique({
+    where: { id },
+    include: includeRelations,
+  });
 }
