@@ -91,7 +91,8 @@ export async function updateCustomerController(request, response, next) {
     const customer = await updateCustomer(request.params.id, data);
     await audit({
       actorId: request.auth.user.id,
-      action: data.isActive === false ? "CUSTOMER_DEACTIVATED" : "CUSTOMER_UPDATED",
+      action:
+        data.isActive === false ? "CUSTOMER_DEACTIVATED" : "CUSTOMER_UPDATED",
       entityType: "Customer",
       entityId: customer.id,
       metadata: { changedFields: Object.keys(data) },

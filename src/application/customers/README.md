@@ -13,12 +13,12 @@ O sistema deve permitir cadastrar, editar, listar e inativar clientes, incluindo
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/customers` | ADMIN, VENDEDOR | Lista clientes com filtros e paginação. |
-| GET | `/customers/:id` | ADMIN, VENDEDOR | Consulta um cliente. |
-| POST | `/customers` | ADMIN, VENDEDOR | Cria um cliente. |
-| PATCH | `/customers/:id` | ADMIN, VENDEDOR | Atualiza ou inativa um cliente. |
+| Método | Rota             | Acesso          | Descrição                               |
+| ------ | ---------------- | --------------- | --------------------------------------- |
+| GET    | `/customers`     | ADMIN, VENDEDOR | Lista clientes com filtros e paginação. |
+| GET    | `/customers/:id` | ADMIN, VENDEDOR | Consulta um cliente.                    |
+| POST   | `/customers`     | ADMIN, VENDEDOR | Cria um cliente.                        |
+| PATCH  | `/customers/:id` | ADMIN, VENDEDOR | Atualiza ou inativa um cliente.         |
 
 ## Pré-requisitos atendidos
 

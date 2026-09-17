@@ -13,7 +13,10 @@ function isValidCpf(document) {
     const sum = document
       .slice(0, length)
       .split("")
-      .reduce((total, value, index) => total + Number(value) * (length + 1 - index), 0);
+      .reduce(
+        (total, value, index) => total + Number(value) * (length + 1 - index),
+        0,
+      );
     const remainder = (sum * 10) % 11;
     return remainder === 10 ? 0 : remainder;
   };
@@ -27,16 +30,21 @@ function isValidCnpj(document) {
 
   const digit = (length) => {
     let factor = length === 12 ? 5 : 6;
-    const sum = document.slice(0, length).split("").reduce((total, value) => {
-      const next = total + Number(value) * factor;
-      factor = factor === 2 ? 9 : factor - 1;
-      return next;
-    }, 0);
+    const sum = document
+      .slice(0, length)
+      .split("")
+      .reduce((total, value) => {
+        const next = total + Number(value) * factor;
+        factor = factor === 2 ? 9 : factor - 1;
+        return next;
+      }, 0);
     const remainder = sum % 11;
     return remainder < 2 ? 0 : 11 - remainder;
   };
 
-  return digit(12) === Number(document[12]) && digit(13) === Number(document[13]);
+  return (
+    digit(12) === Number(document[12]) && digit(13) === Number(document[13])
+  );
 }
 
 // Confirma se o documento informado é CPF ou CNPJ válido.
@@ -48,29 +56,44 @@ function isValidFiscalDocument(value) {
 
 const document = yup
   .string()
-  .transform((_value, originalValue) => originalValue ? normalizeDocument(originalValue) : null)
+  .transform((_value, originalValue) =>
+    originalValue ? normalizeDocument(originalValue) : null,
+  )
   .test("fiscal-document", "CPF/CNPJ inválido", isValidFiscalDocument)
   .nullable();
 
-const address = yup.object({
-  street: yup.string().trim().max(150).required("Logradouro é obrigatório"),
-  number: yup.string().trim().max(20).required("Número é obrigatório"),
-  complement: yup.string().trim().max(100).nullable(),
-  neighborhood: yup.string().trim().max(100).required("Bairro é obrigatório"),
-  city: yup.string().trim().max(100).required("Cidade é obrigatória"),
-  state: yup.string().trim().uppercase().length(2, "UF deve ter 2 letras").required("UF é obrigatória"),
-  zipCode: yup
-    .string()
-    .transform((_value, originalValue) => String(originalValue || "").replace(/\D/g, ""))
-    .matches(/^\d{8}$/, "CEP inválido")
-    .required("CEP é obrigatório"),
-}).default(undefined);
+const address = yup
+  .object({
+    street: yup.string().trim().max(150).required("Logradouro é obrigatório"),
+    number: yup.string().trim().max(20).required("Número é obrigatório"),
+    complement: yup.string().trim().max(100).nullable(),
+    neighborhood: yup.string().trim().max(100).required("Bairro é obrigatório"),
+    city: yup.string().trim().max(100).required("Cidade é obrigatória"),
+    state: yup
+      .string()
+      .trim()
+      .uppercase()
+      .length(2, "UF deve ter 2 letras")
+      .required("UF é obrigatória"),
+    zipCode: yup
+      .string()
+      .transform((_value, originalValue) =>
+        String(originalValue || "").replace(/\D/g, ""),
+      )
+      .matches(/^\d{8}$/, "CEP inválido")
+      .required("CEP é obrigatório"),
+  })
+  .default(undefined);
 
 const customerFields = {
   name: yup.string().trim().min(2).max(150),
   document,
   email: yup.string().trim().lowercase().email("E-mail inválido").nullable(),
-  phone: yup.string().trim().matches(/^\+?[0-9 ()-]{8,20}$/, "Telefone inválido").nullable(),
+  phone: yup
+    .string()
+    .trim()
+    .matches(/^\+?[0-9 ()-]{8,20}$/, "Telefone inválido")
+    .nullable(),
   address,
   isActive: yup.boolean(),
 };
@@ -88,7 +111,11 @@ export const listCustomersValidation = yup.object({
   isActive: yup
     .boolean()
     .transform((value, originalValue) =>
-      originalValue === "true" ? true : originalValue === "false" ? false : value,
+      originalValue === "true"
+        ? true
+        : originalValue === "false"
+          ? false
+          : value,
     ),
   page: yup.number().integer().min(1).default(1),
   limit: yup.number().integer().min(1).max(100).default(20),
