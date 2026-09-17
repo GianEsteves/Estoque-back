@@ -26,10 +26,10 @@ O sistema deve permitir consultar vendas por período, cliente, vendedor e statu
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/sales` | ADMIN, VENDEDOR | Lista vendas com filtros e paginação. |
-| GET | `/sales/:id` | ADMIN, VENDEDOR | Consulta venda e seus itens. |
-| POST | `/sales` | ADMIN, VENDEDOR | Cria e finaliza uma venda. |
-| POST | `/sales/:id/cancel` | ADMIN, VENDEDOR | Cancela venda; exige motivo. |
-| GET | `/sales/reports` | ADMIN | Gera relatório por período, cliente, vendedor e status. |
+| Método | Rota                | Acesso          | Descrição                                               |
+| ------ | ------------------- | --------------- | ------------------------------------------------------- |
+| GET    | `/sales`            | ADMIN, VENDEDOR | Lista vendas com filtros e paginação.                   |
+| GET    | `/sales/:id`        | ADMIN, VENDEDOR | Consulta venda e seus itens.                            |
+| POST   | `/sales`            | ADMIN, VENDEDOR | Cria e finaliza uma venda.                              |
+| POST   | `/sales/:id/cancel` | ADMIN, VENDEDOR | Cancela venda; exige motivo.                            |
+| GET    | `/sales/reports`    | ADMIN           | Gera relatório por período, cliente, vendedor e status. |
