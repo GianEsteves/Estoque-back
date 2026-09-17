@@ -60,11 +60,7 @@ function createFirebaseFake() {
     // Simula a criação de uma conta Firebase.
     signUp(email, password) {
       if (users.has(email)) {
-        throw httpError(
-          "E-mail ja cadastrado",
-          409,
-          "EMAIL_ALREADY_EXISTS",
-        );
+        throw httpError("E-mail ja cadastrado", 409, "EMAIL_ALREADY_EXISTS");
       }
 
       const user = {
@@ -82,11 +78,7 @@ function createFirebaseFake() {
       const user = users.get(email);
 
       if (!user || user.password !== password) {
-        throw httpError(
-          "Credenciais invalidas",
-          401,
-          "INVALID_CREDENTIALS",
-        );
+        throw httpError("Credenciais invalidas", 401, "INVALID_CREDENTIALS");
       }
 
       return createSession(user);
@@ -108,8 +100,7 @@ function createFirebaseFake() {
     // Simula o envio do e-mail de verificação.
     sendEmailVerification(idToken) {
       const user = tokens.get(idToken);
-      user.verificationEmailCount =
-        (user.verificationEmailCount || 0) + 1;
+      user.verificationEmailCount = (user.verificationEmailCount || 0) + 1;
       return { email: user.email };
     },
 
@@ -206,10 +197,7 @@ test("fluxo Firebase de cadastro, verificacao e login", async () => {
       password,
     });
     assert.equal(loginBeforeVerification.status, 403);
-    assert.equal(
-      loginBeforeVerification.body.code,
-      "EMAIL_NOT_VERIFIED",
-    );
+    assert.equal(loginBeforeVerification.body.code, "EMAIL_NOT_VERIFIED");
 
     const resent = await request(port, "/auth/resend-code", {
       email,
