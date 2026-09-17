@@ -15,19 +15,19 @@ Este módulo será responsável por papéis, permissões e autorização das rot
 
 ## Matriz inicial de acesso
 
-| Papel | Acesso principal |
-| --- | --- |
-| ADMIN | Gestão completa, usuários, auditoria, vendas e estoque. |
-| VENDEDOR | Clientes, vendas, consulta de produtos e dashboard comercial. |
-| ESTOQUISTA | Produtos, categorias, fornecedores, estoque e movimentações. |
+| Papel      | Acesso principal                                              |
+| ---------- | ------------------------------------------------------------- |
+| ADMIN      | Gestão completa, usuários, auditoria, vendas e estoque.       |
+| VENDEDOR   | Clientes, vendas, consulta de produtos e dashboard comercial. |
+| ESTOQUISTA | Produtos, categorias, fornecedores, estoque e movimentações.  |
 
 ## Rotas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/permissions/me` | Autenticado | Retorna o papel e as permissões efetivas do usuário atual. |
-| GET | `/permissions` | ADMIN | Retorna a matriz completa de permissões por papel. |
-| PATCH | `/users/:id` | ADMIN | Define o papel do usuário; a alteração revoga sessões ativas. |
+| Método | Rota              | Acesso      | Descrição                                                     |
+| ------ | ----------------- | ----------- | ------------------------------------------------------------- |
+| GET    | `/permissions/me` | Autenticado | Retorna o papel e as permissões efetivas do usuário atual.    |
+| GET    | `/permissions`    | ADMIN       | Retorna a matriz completa de permissões por papel.            |
+| PATCH  | `/users/:id`      | ADMIN       | Define o papel do usuário; a alteração revoga sessões ativas. |
 
 ## Pré-requisitos atendidos
 
