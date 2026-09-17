@@ -9,6 +9,7 @@
     "start": "node app.js",
     "test": "node --test src/tests/app.test.js",
     "test:integration": "node --test src/tests/auth.test.js",
+    "db:seed": "node scripts/seed-demo.js",
     "users:promote": "node scripts/promote-admin.js",
     "prisma": "prisma",
     "postinstall": "prisma generate"
