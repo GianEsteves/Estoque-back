@@ -38,7 +38,9 @@ app.use(apiRateLimit);
 
 routes(app);
 app.use((_request, response) => {
-  response.status(404).json({ code: "NOT_FOUND", message: "Rota não encontrada" });
+  response
+    .status(404)
+    .json({ code: "NOT_FOUND", message: "Rota não encontrada" });
 });
 app.use(errorHandler);
 
@@ -55,6 +57,9 @@ export function startServer(port = Number(process.env.PORT) || 6868) {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
   startServer();
 }
