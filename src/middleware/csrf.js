@@ -22,5 +22,9 @@ export function requireCsrf(request, _response, next) {
   const valid =
     expected.length === received.length && timingSafeEqual(expected, received);
 
-  next(valid ? undefined : httpError("Token CSRF inválido", 403, "INVALID_CSRF_TOKEN"));
+  next(
+    valid
+      ? undefined
+      : httpError("Token CSRF inválido", 403, "INVALID_CSRF_TOKEN"),
+  );
 }

@@ -38,7 +38,11 @@ export async function authenticate(request, _response, next) {
     }
 
     if (user.mfaRequired && !decodedToken.firebase?.sign_in_second_factor) {
-      throw httpError("Autenticação multifator obrigatória", 403, "MFA_REQUIRED");
+      throw httpError(
+        "Autenticação multifator obrigatória",
+        403,
+        "MFA_REQUIRED",
+      );
     }
 
     request.auth = { firebase: decodedToken, user };

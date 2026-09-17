@@ -23,7 +23,11 @@ const csrfCookieOptions = {
 // Define os cookies de sessão e proteção CSRF.
 export function setSession(response, sessionCookie) {
   response.cookie("session", sessionCookie, sessionCookieOptions);
-  response.cookie("csrf_token", randomBytes(32).toString("hex"), csrfCookieOptions);
+  response.cookie(
+    "csrf_token",
+    randomBytes(32).toString("hex"),
+    csrfCookieOptions,
+  );
 }
 
 // Remove os cookies de sessão do cliente.

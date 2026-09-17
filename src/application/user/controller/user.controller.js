@@ -98,7 +98,8 @@ export async function createUserController(request, response, next) {
     });
     response.status(201).json({
       user,
-      message: "Usuário criado. Solicite que ele valide o e-mail antes do primeiro acesso.",
+      message:
+        "Usuário criado. Solicite que ele valide o e-mail antes do primeiro acesso.",
     });
   } catch (error) {
     if (firebaseUser?.uid) {
@@ -128,7 +129,7 @@ export async function updateUserController(request, response, next) {
     const losesAdminAccess =
       target.role === "ADMIN" &&
       target.isActive &&
-      (data.role && data.role !== "ADMIN" || data.isActive === false);
+      ((data.role && data.role !== "ADMIN") || data.isActive === false);
 
     if (losesAdminAccess && (await countActiveAdmins(target.id)) === 0) {
       throw httpError(
@@ -151,7 +152,9 @@ export async function updateUserController(request, response, next) {
 
     const firebaseChanges = {
       ...(data.name ? { displayName: data.name } : {}),
-      ...(data.profilePhoto !== undefined ? { photoURL: data.profilePhoto || null } : {}),
+      ...(data.profilePhoto !== undefined
+        ? { photoURL: data.profilePhoto || null }
+        : {}),
       ...(data.isActive !== undefined ? { disabled: !data.isActive } : {}),
     };
 
@@ -161,7 +164,9 @@ export async function updateUserController(request, response, next) {
 
     const user = await updateUser(target.id, data);
     const mustRevokeSessions =
-      data.isActive === false || data.role !== undefined || data.mfaRequired !== undefined;
+      data.isActive === false ||
+      data.role !== undefined ||
+      data.mfaRequired !== undefined;
 
     if (mustRevokeSessions) {
       await revokeFirebaseSessions(target.firebaseUid);

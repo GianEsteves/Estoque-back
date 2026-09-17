@@ -1,7 +1,6 @@
 import { httpError } from "./app-error.js";
 
-const FIREBASE_AUTH_URL =
-  "https://identitytoolkit.googleapis.com/v1/accounts";
+const FIREBASE_AUTH_URL = "https://identitytoolkit.googleapis.com/v1/accounts";
 
 let testAdapter;
 
@@ -71,11 +70,7 @@ function mapFirebaseError(firebaseCode) {
 
   return (
     errors[normalizedCode] ||
-    httpError(
-      "Falha ao autenticar com Firebase",
-      502,
-      "FIREBASE_AUTH_ERROR",
-    )
+    httpError("Falha ao autenticar com Firebase", 502, "FIREBASE_AUTH_ERROR")
   );
 }
 

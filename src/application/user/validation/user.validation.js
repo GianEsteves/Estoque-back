@@ -63,7 +63,11 @@ export const listUsersValidation = yup.object({
   isActive: yup
     .boolean()
     .transform((value, originalValue) =>
-      originalValue === "true" ? true : originalValue === "false" ? false : value,
+      originalValue === "true"
+        ? true
+        : originalValue === "false"
+          ? false
+          : value,
     ),
   page: yup.number().integer().min(1).default(1),
   limit: yup.number().integer().min(1).max(100).default(20),

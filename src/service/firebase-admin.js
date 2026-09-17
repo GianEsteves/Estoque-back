@@ -1,6 +1,11 @@
 import "dotenv/config";
 
-import { applicationDefault, cert, getApps, initializeApp } from "firebase-admin/app";
+import {
+  applicationDefault,
+  cert,
+  getApps,
+  initializeApp,
+} from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 
 const sessionDuration = 8 * 60 * 60 * 1000;
