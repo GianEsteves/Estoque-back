@@ -105,7 +105,8 @@ export async function updateProductController(request, response, next) {
     const product = await updateProduct(request.params.id, data);
     await audit({
       actorId: request.auth.user.id,
-      action: data.isActive === false ? "PRODUCT_DEACTIVATED" : "PRODUCT_UPDATED",
+      action:
+        data.isActive === false ? "PRODUCT_DEACTIVATED" : "PRODUCT_UPDATED",
       entityType: "Product",
       entityId: product.id,
       metadata: { changedFields: Object.keys(data) },

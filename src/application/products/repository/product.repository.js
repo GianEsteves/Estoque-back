@@ -3,7 +3,13 @@ import { prisma } from "../../../service/prisma.js";
 const includeCategory = { category: true };
 
 // Lista produtos aplicando filtros e paginação.
-export async function listProducts({ search, categoryId, isActive, page, limit }) {
+export async function listProducts({
+  search,
+  categoryId,
+  isActive,
+  page,
+  limit,
+}) {
   const where = {
     ...(categoryId ? { categoryId } : {}),
     ...(typeof isActive === "boolean" ? { isActive } : {}),
@@ -48,5 +54,9 @@ export function createProduct(data) {
 
 // Atualiza somente os dados cadastrais do produto.
 export function updateProduct(id, data) {
-  return prisma.product.update({ where: { id }, data, include: includeCategory });
+  return prisma.product.update({
+    where: { id },
+    data,
+    include: includeCategory,
+  });
 }

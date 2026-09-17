@@ -18,12 +18,12 @@ O sistema deve permitir pesquisar, filtrar e paginar produtos por nome, código,
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/products` | Autenticado | Lista produtos; aceita `search`, `categoryId`, `status`, `page` e `limit`. |
-| GET | `/products/:id` | Autenticado | Consulta os detalhes e o saldo de um produto. |
-| POST | `/products` | ADMIN, ESTOQUISTA | Cria um produto. |
-| PATCH | `/products/:id` | ADMIN, ESTOQUISTA | Atualiza ou inativa um produto. |
+| Método | Rota            | Acesso            | Descrição                                                                  |
+| ------ | --------------- | ----------------- | -------------------------------------------------------------------------- |
+| GET    | `/products`     | Autenticado       | Lista produtos; aceita `search`, `categoryId`, `status`, `page` e `limit`. |
+| GET    | `/products/:id` | Autenticado       | Consulta os detalhes e o saldo de um produto.                              |
+| POST   | `/products`     | ADMIN, ESTOQUISTA | Cria um produto.                                                           |
+| PATCH  | `/products/:id` | ADMIN, ESTOQUISTA | Atualiza ou inativa um produto.                                            |
 
 ## Pré-requisitos atendidos
 

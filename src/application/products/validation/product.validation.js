@@ -2,7 +2,9 @@ import * as yup from "yup";
 
 // Normaliza o SKU para comparação e armazenamento consistentes.
 function normalizeSku(value) {
-  return String(value || "").trim().toUpperCase();
+  return String(value || "")
+    .trim()
+    .toUpperCase();
 }
 
 const sku = yup
@@ -18,7 +20,10 @@ const productFields = {
   categoryId: yup.string().trim().required("Categoria é obrigatória"),
   costPrice: yup.number().min(0, "Preço de custo não pode ser negativo"),
   salePrice: yup.number().moreThan(0, "Preço de venda deve ser maior que zero"),
-  minimumStock: yup.number().integer().min(0, "Estoque mínimo não pode ser negativo"),
+  minimumStock: yup
+    .number()
+    .integer()
+    .min(0, "Estoque mínimo não pode ser negativo"),
   isActive: yup.boolean(),
 };
 
@@ -28,7 +33,9 @@ export const createProductValidation = yup.object({
   sku: sku.required("SKU é obrigatório"),
   costPrice: productFields.costPrice.required("Preço de custo é obrigatório"),
   salePrice: productFields.salePrice.required("Preço de venda é obrigatório"),
-  minimumStock: productFields.minimumStock.required("Estoque mínimo é obrigatório"),
+  minimumStock: productFields.minimumStock.required(
+    "Estoque mínimo é obrigatório",
+  ),
 });
 
 export const updateProductValidation = yup.object({
@@ -42,7 +49,11 @@ export const listProductsValidation = yup.object({
   isActive: yup
     .boolean()
     .transform((value, originalValue) =>
-      originalValue === "true" ? true : originalValue === "false" ? false : value,
+      originalValue === "true"
+        ? true
+        : originalValue === "false"
+          ? false
+          : value,
     ),
   page: yup.number().integer().min(1).default(1),
   limit: yup.number().integer().min(1).max(100).default(20),
