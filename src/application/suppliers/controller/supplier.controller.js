@@ -91,7 +91,8 @@ export async function updateSupplierController(request, response, next) {
     const supplier = await updateSupplier(request.params.id, data);
     await audit({
       actorId: request.auth.user.id,
-      action: data.isActive === false ? "SUPPLIER_DEACTIVATED" : "SUPPLIER_UPDATED",
+      action:
+        data.isActive === false ? "SUPPLIER_DEACTIVATED" : "SUPPLIER_UPDATED",
       entityType: "Supplier",
       entityId: supplier.id,
       metadata: { changedFields: Object.keys(data) },
