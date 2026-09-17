@@ -13,7 +13,7 @@ O sistema deve identificar e exibir produtos cujo estoque atual esteja igual ou 
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/alerts/low-stock` | ADMIN, ESTOQUISTA | Lista produtos com estoque baixo. |
-| GET | `/alerts/summary` | ADMIN, ESTOQUISTA | Retorna total de alertas e indicadores. |
+| Método | Rota                | Acesso            | Descrição                               |
+| ------ | ------------------- | ----------------- | --------------------------------------- |
+| GET    | `/alerts/low-stock` | ADMIN, ESTOQUISTA | Lista produtos com estoque baixo.       |
+| GET    | `/alerts/summary`   | ADMIN, ESTOQUISTA | Retorna total de alertas e indicadores. |
