@@ -13,9 +13,9 @@ O sistema deve permitir cadastrar, editar, listar e inativar categorias de produ
 
 ## Rotas previstas
 
-| Método | Rota | Acesso | Descrição |
-| --- | --- | --- | --- |
-| GET | `/categories` | Autenticado | Lista categorias com filtros e paginação. |
-| GET | `/categories/:id` | Autenticado | Consulta uma categoria. |
-| POST | `/categories` | ADMIN, ESTOQUISTA | Cria uma categoria. |
-| PATCH | `/categories/:id` | ADMIN, ESTOQUISTA | Atualiza ou inativa uma categoria. |
+| Método | Rota              | Acesso            | Descrição                                 |
+| ------ | ----------------- | ----------------- | ----------------------------------------- |
+| GET    | `/categories`     | Autenticado       | Lista categorias com filtros e paginação. |
+| GET    | `/categories/:id` | Autenticado       | Consulta uma categoria.                   |
+| POST   | `/categories`     | ADMIN, ESTOQUISTA | Cria uma categoria.                       |
+| PATCH  | `/categories/:id` | ADMIN, ESTOQUISTA | Atualiza ou inativa uma categoria.        |
