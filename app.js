@@ -65,4 +65,8 @@ if (
 }
 
 // A Vercel usa a exportação padrão como handler da função serverless.
-export default app;
+// O wrapper explícito garante que a exportação seja uma função HTTP, em vez de
+// depender da detecção automática da instância do Express.
+export default function handler(request, response) {
+  return app(request, response);
+}
