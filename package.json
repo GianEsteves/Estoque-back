@@ -13,7 +13,7 @@
     "users:provision-test": "node scripts/provision-test-users.js",
     "users:promote": "node scripts/promote-admin.js",
     "prisma": "prisma",
-    "postinstall": "prisma generate"
+    "build": "prisma generate"
   },
   "author": "",
   "license": "ISC",
