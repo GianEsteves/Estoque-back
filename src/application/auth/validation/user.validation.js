@@ -13,7 +13,7 @@ const email = yup
 // Confirma que a URL utiliza HTTPS.
 function isHttpsUrl(value) {
   if (!value) {
-    return false;
+    return true;
   }
 
   try {
