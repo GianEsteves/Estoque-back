@@ -63,3 +63,6 @@ if (
 ) {
   startServer();
 }
+
+// A Vercel usa a exportação padrão como handler da função serverless.
+export default app;
